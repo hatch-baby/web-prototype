@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Feature } from "@/lib/features/types";
+import { colors } from "@/lib/theme";
 
 type Props = {
   feature: Feature;
@@ -22,8 +23,20 @@ export function FeatureCard({ feature }: Props) {
         <h3 className="text-xl font-semibold text-stone-900">
           {feature.title}
         </h3>
-        <span className="rounded-full bg-[#385481]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#1f2f4b]">
+        <span className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#1f2f4b]" style={{ backgroundColor: `${colors.primary}1A` }}>
           Feature
+        </span>
+      </div>
+      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+        <span
+          className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em]"
+          style={{
+            backgroundColor: `${colors.primary}14`,
+            color: colors.textPrimary,
+            border: `1px solid ${colors.primary}33`,
+          }}
+        >
+          {feature.pillar}
         </span>
       </div>
       <p className="mt-3 text-stone-700">{feature.description}</p>
@@ -53,14 +66,22 @@ export function FeatureCard({ feature }: Props) {
                 href={flag.url}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-[#385481]/25 bg-[#385481]/10 px-3 py-1 text-xs font-semibold text-[#1f2f4b] shadow-sm transition hover:-translate-y-0.5 hover:border-[#385481]/40 hover:bg-white"
+                className="rounded-full border px-3 py-1 text-xs font-semibold text-[#1f2f4b] shadow-sm transition hover:-translate-y-0.5 hover:bg-white"
+                style={{
+                  borderColor: `${colors.primary}40`,
+                  backgroundColor: `${colors.primary}1A`,
+                }}
               >
                 [{flag.isExperiment ? "E" : "G"}] {flag.name}
               </a>
             ) : (
               <span
                 key={flag.name}
-                className="rounded-full border border-[#385481]/20 bg-[#385481]/10 px-3 py-1 text-xs font-medium text-[#1f2f4b] shadow-sm"
+                className="rounded-full border px-3 py-1 text-xs font-medium text-[#1f2f4b] shadow-sm"
+                style={{
+                  borderColor: `${colors.primary}33`,
+                  backgroundColor: `${colors.primary}1A`,
+                }}
               >
                 [{flag.isExperiment ? "E" : "G"}] {flag.name}
               </span>

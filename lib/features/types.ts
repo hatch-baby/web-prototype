@@ -9,6 +9,7 @@ export type Feature = {
   owner: string;
   team: string;
   status: "In Discovery" | "In Experiment" | "Released";
+  pillar: Pillar;
 };
 
 export type StatsigFlagRef = {
@@ -17,3 +18,9 @@ export type StatsigFlagRef = {
   isFeatureGate: boolean;
   url?: string;
 };
+
+export type Pillar =
+  | "Pillar 0"
+  | "Pillar 1"
+  | "Pillar 2"
+  | "Pillar Growth";

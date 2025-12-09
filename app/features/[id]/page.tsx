@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { features } from "@/lib/features/data";
 import type { Feature } from "@/lib/features/types";
+import { colors } from "@/lib/theme";
 
 const formatDate = (date: string) =>
   new Date(date).toLocaleDateString(undefined, {
@@ -39,6 +40,16 @@ export default async function FeatureDetailPage({ params }: PageProps) {
           <div className="mt-3 flex flex-wrap gap-3 text-sm text-stone-700">
             <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-stone-700">
               {feature.status}
+            </span>
+            <span
+              className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em]"
+              style={{
+                backgroundColor: `${colors.primary}14`,
+                color: colors.textPrimary,
+                border: `1px solid ${colors.primary}33`,
+              }}
+            >
+              {feature.pillar}
             </span>
             <span className="text-stone-600">Owner: {feature.owner}</span>
             <span className="text-stone-600">Team: {feature.team}</span>

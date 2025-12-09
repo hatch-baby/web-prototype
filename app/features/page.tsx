@@ -1,7 +1,43 @@
+"use client";
+
 import { FeatureCard } from "@/components/FeatureCard";
-import { features } from "@/lib/features/data";
+import { useFeatureStore } from "@/lib/features/store";
+import type { ReleasedFilter, SortOption } from "@/lib/features/store";
+import type { Pillar } from "@/lib/features/types";
+import { colors } from "@/lib/theme";
 
 export default function FeatureListPage() {
+  const {
+    filteredAndSortedFeatures,
+    selectedPillars,
+    releasedFilter,
+    sortOption,
+    setSelectedPillars,
+    setReleasedFilter,
+    setSortOption,
+  } = useFeatureStore();
+
+  const allPillars: Pillar[] = ["Pillar 0", "Pillar 1", "Pillar 2", "Pillar Growth"];
+
+  const togglePillar = (pillar: Pillar) => {
+    setSelectedPillars((prev) =>
+      prev.includes(pillar) ? prev.filter((p) => p !== pillar) : [...prev, pillar],
+    );
+  };
+
+  const releasedOptions: { label: string; value: ReleasedFilter }[] = [
+    { label: "All", value: "all" },
+    { label: "Released", value: "released" },
+    { label: "Unreleased", value: "unreleased" },
+  ];
+
+  const sortOptions: { label: string; value: SortOption }[] = [
+    { label: "Newest First (Created)", value: "created_desc" },
+    { label: "Oldest First (Created)", value: "created_asc" },
+    { label: "Title A–Z", value: "title_asc" },
+    { label: "Title Z–A", value: "title_desc" },
+  ];
+
   return (
     <div className="space-y-8">
       <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50 via-white to-[#385481]/10 p-8 shadow-sm ring-1 ring-black/5">
@@ -17,8 +53,86 @@ export default function FeatureListPage() {
         </p>
       </section>
 
+      <section className="space-y-4 rounded-3xl border border-stone-100 bg-white/80 p-6 shadow-sm">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs uppercase tracking-[0.2em] text-stone-500">
+            Pillars
+          </span>
+          <button
+            onClick={() => setSelectedPillars([])}
+            className="rounded-full border px-3 py-1 text-xs font-semibold transition"
+            style={{
+              borderColor: selectedPillars.length === 0 ? `${colors.primary}40` : colors.borderSubtle,
+              backgroundColor: selectedPillars.length === 0 ? `${colors.primary}15` : colors.surface,
+              color: colors.textPrimary,
+            }}
+          >
+            All Pillars
+          </button>
+          {allPillars.map((pillar) => {
+            const active = selectedPillars.includes(pillar);
+            return (
+              <button
+                key={pillar}
+                onClick={() => togglePillar(pillar)}
+                className="rounded-full border px-3 py-1 text-xs font-semibold transition"
+                style={{
+                  borderColor: active ? `${colors.primary}50` : colors.borderSubtle,
+                  backgroundColor: active ? `${colors.primary}18` : colors.surface,
+                  color: colors.textPrimary,
+                }}
+              >
+                {pillar}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs uppercase tracking-[0.2em] text-stone-500">
+            Release
+          </span>
+          <div className="flex overflow-hidden rounded-full border border-stone-200 bg-white shadow-sm">
+            {releasedOptions.map((opt) => {
+              const active = releasedFilter === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => setReleasedFilter(opt.value)}
+                  className="px-4 py-2 text-xs font-semibold transition"
+                  style={{
+                    backgroundColor: active ? `${colors.primary}18` : "transparent",
+                    color: colors.textPrimary,
+                    borderRight: "1px solid #eaeaea",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs uppercase tracking-[0.2em] text-stone-500">
+            Sort
+          </span>
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value as SortOption)}
+            className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 shadow-sm"
+          >
+            {sortOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
+
       <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {features.map((feature) => (
+        {filteredAndSortedFeatures.map((feature) => (
           <FeatureCard key={feature.id} feature={feature} />
         ))}
       </section>

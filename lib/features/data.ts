@@ -26,6 +26,7 @@ export const features: Feature[] = [
     owner: "Lorraine",
     team: "Health Insights",
     status: "Released",
+    pillar: "Pillar 1",
   },
   {
     id: "onboarding-flow-v2",
@@ -57,6 +58,7 @@ export const features: Feature[] = [
     owner: "Jason Zurita",
     team: "Activation",
     status: "Released",
+    pillar: "Pillar Growth",
   },
   {
     id: "client-dashboard-v2",
@@ -83,6 +85,7 @@ export const features: Feature[] = [
     owner: "Priya Raman",
     team: "Client Experience",
     status: "Released",
+    pillar: "Pillar 0",
   },
   {
     id: "media-collage-editor",
@@ -108,6 +111,7 @@ export const features: Feature[] = [
     owner: "Cam Nguyen",
     team: "Creation",
     status: "In Experiment",
+    pillar: "Pillar 2",
   },
   {
     id: "activation-journey-experiments",
@@ -139,6 +143,7 @@ export const features: Feature[] = [
     owner: "Mina Patel",
     team: "Activation",
     status: "Released",
+    pillar: "Pillar Growth",
   },
   {
     id: "prototype-playground-tab",
@@ -164,6 +169,7 @@ export const features: Feature[] = [
     owner: "Diego Alvarez",
     team: "Platform",
     status: "In Experiment",
+    pillar: "Pillar 1",
   },
   {
     id: "insights-digest-email",
@@ -189,5 +195,6 @@ export const features: Feature[] = [
     owner: "Noor Hassan",
     team: "Insights",
     status: "Released",
+    pillar: "Pillar 0",
   },
 ];
