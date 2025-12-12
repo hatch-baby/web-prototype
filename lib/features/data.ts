@@ -25,7 +25,7 @@ export const features: Feature[] = [
     dateReleased: "2024-03-04",
     owner: "Lorraine",
     team: "Health Insights",
-    status: "Released",
+    status: "released",
     pillar: "Pillar 1",
   },
   {
@@ -57,7 +57,7 @@ export const features: Feature[] = [
     dateReleased: "2024-02-26",
     owner: "Jason Zurita",
     team: "Activation",
-    status: "Released",
+    status: "released",
     pillar: "Pillar Growth",
   },
   {
@@ -84,7 +84,7 @@ export const features: Feature[] = [
     dateReleased: "2024-04-08",
     owner: "Priya Raman",
     team: "Client Experience",
-    status: "Released",
+    status: "released",
     pillar: "Pillar 0",
   },
   {
@@ -110,7 +110,7 @@ export const features: Feature[] = [
     dateReleased: "2024-04-15",
     owner: "Cam Nguyen",
     team: "Creation",
-    status: "In Experiment",
+    status: "in_progress",
     pillar: "Pillar 2",
   },
   {
@@ -142,7 +142,7 @@ export const features: Feature[] = [
     dateReleased: "2024-03-22",
     owner: "Mina Patel",
     team: "Activation",
-    status: "Released",
+    status: "released",
     pillar: "Pillar Growth",
   },
   {
@@ -168,7 +168,7 @@ export const features: Feature[] = [
     dateReleased: "2024-04-26",
     owner: "Diego Alvarez",
     team: "Platform",
-    status: "In Experiment",
+    status: "in_progress",
     pillar: "Pillar 1",
   },
   {
@@ -194,7 +194,40 @@ export const features: Feature[] = [
     dateReleased: "2024-02-05",
     owner: "Noor Hassan",
     team: "Insights",
-    status: "Released",
+    status: "released",
     pillar: "Pillar 0",
+  },
+  {
+    id: "sleep-logging",
+    title: "Sleep Logging",
+    description:
+      "Foundational sleep logging experience with phased rollout and form refinements.",
+    webUrl: "https://raz-web-prototype.vercel.app/",
+    statsigFlags: [
+      {
+        name: "sleep_logging_brief_enabled",
+        isExperiment: false,
+        isFeatureGate: true,
+        url: "https://console.statsig.com/0JEh0qdbLTd3W81GsLZa4/gates/sleep_logging_brief_enabled",
+      },
+    ],
+    dateCreated: "2024-04-18",
+    owner: "Amira Sol",
+    team: "Health Insights",
+    status: "in_progress",
+    pillar: "Pillar 2",
+  },
+  {
+    id: "web-library",
+    title: "Web Library",
+    description:
+      "Unified web library for browsing and validating prototypes across teams and pillars.",
+    webUrl: "https://thad-vercel-test-d84y.vercel.app/",
+    statsigFlags: [],
+    dateCreated: "2024-05-12",
+    owner: "Team Web",
+    team: "Platform",
+    status: "in_progress",
+    pillar: "Pillar 2",
   },
 ];

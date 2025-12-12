@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { features as initialFeatures } from "./data";
+import { featureRepo } from "./repo";
 import type { Feature, Pillar } from "./types";
 
 export type ReleasedFilter = "all" | "released" | "unreleased";
 export type SortOption = "created_desc" | "created_asc" | "title_asc" | "title_desc";
+export type FeatureStatusFilter = "all" | "in_progress" | "released";
 
 const sortFeatures = (items: Feature[], sort: SortOption) => {
   const sorted = [...items];
@@ -35,32 +36,58 @@ const filterFeatures = (
   items: Feature[],
   selectedPillars: Pillar[],
   releasedFilter: ReleasedFilter,
+  statusFilter: FeatureStatusFilter,
 ) => {
   let result = [...items];
+
+   // status filter
+  if (statusFilter !== "all") {
+    result = result.filter((f) => f.status === statusFilter);
+  }
+
   if (selectedPillars.length > 0) {
     result = result.filter((f) => selectedPillars.includes(f.pillar));
   }
   if (releasedFilter === "released") {
-    result = result.filter((f) => Boolean(f.dateReleased));
+    result = result.filter((f) => f.status === "released");
   } else if (releasedFilter === "unreleased") {
-    result = result.filter((f) => !f.dateReleased);
+    result = result.filter((f) => f.status !== "released");
   }
   return result;
 };
 
 export function useFeatureStore() {
-  const [features] = useState<Feature[]>(initialFeatures);
+  const [features, setFeatures] = useState<Feature[]>(featureRepo.getAll());
   const [selectedPillars, setSelectedPillars] = useState<Pillar[]>([]);
   const [releasedFilter, setReleasedFilter] = useState<ReleasedFilter>("all");
   const [sortOption, setSortOption] = useState<SortOption>("created_desc");
+  const [statusFilter, setStatusFilter] = useState<FeatureStatusFilter>("all");
+
+  const refresh = () => setFeatures(featureRepo.getAll());
+
+  const addStatsigFlag = (featureId: string, flag: Parameters<typeof featureRepo.addStatsigFlag>[1]) => {
+    const updated = featureRepo.addStatsigFlag(featureId, flag);
+    if (updated) refresh();
+    return updated;
+  };
+
+  const addFeature = (feature: Feature) => {
+    featureRepo.add(feature);
+    refresh();
+  };
+
+  const updateFeature = (feature: Feature) => {
+    featureRepo.update(feature);
+    refresh();
+  };
 
   const filteredAndSortedFeatures = useMemo(
     () =>
       sortFeatures(
-        filterFeatures(features, selectedPillars, releasedFilter),
+        filterFeatures(features, selectedPillars, releasedFilter, statusFilter),
         sortOption,
       ),
-    [features, selectedPillars, releasedFilter, sortOption],
+    [features, selectedPillars, releasedFilter, statusFilter, sortOption],
   );
 
   return {
@@ -68,9 +95,14 @@ export function useFeatureStore() {
     selectedPillars,
     releasedFilter,
     sortOption,
+    statusFilter,
     setSelectedPillars,
     setReleasedFilter,
     setSortOption,
+    setStatusFilter,
+    addStatsigFlag,
+    addFeature,
+    updateFeature,
     filteredAndSortedFeatures,
   };
 }

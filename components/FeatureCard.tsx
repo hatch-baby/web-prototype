@@ -13,6 +13,9 @@ const formatDate = (date: string) =>
     year: "numeric",
   });
 
+const statusLabel = (status: Feature["status"]) =>
+  status === "released" ? "Released" : "In Progress";
+
 export function FeatureCard({ feature }: Props) {
   return (
     <Link
@@ -43,7 +46,7 @@ export function FeatureCard({ feature }: Props) {
 
       <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-stone-700">
         <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-stone-700">
-          {feature.status}
+          {statusLabel(feature.status)}
         </span>
         <span className="text-stone-600">Owner: {feature.owner}</span>
         <span className="text-stone-600">Team: {feature.team}</span>

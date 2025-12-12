@@ -4,6 +4,9 @@ import { features } from "@/lib/features/data";
 import type { Feature } from "@/lib/features/types";
 import { colors } from "@/lib/theme";
 
+const statusLabel = (status: Feature["status"]) =>
+  status === "released" ? "Released" : "In Progress";
+
 const formatDate = (date: string) =>
   new Date(date).toLocaleDateString(undefined, {
     month: "short",
@@ -39,7 +42,7 @@ export default async function FeatureDetailPage({ params }: PageProps) {
           <p className="mt-2 text-stone-700">{feature.description}</p>
           <div className="mt-3 flex flex-wrap gap-3 text-sm text-stone-700">
             <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-stone-700">
-              {feature.status}
+              {statusLabel(feature.status)}
             </span>
             <span
               className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em]"

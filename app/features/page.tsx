@@ -2,7 +2,7 @@
 
 import { FeatureCard } from "@/components/FeatureCard";
 import { useFeatureStore } from "@/lib/features/store";
-import type { ReleasedFilter, SortOption } from "@/lib/features/store";
+import type { ReleasedFilter, SortOption, FeatureStatusFilter } from "@/lib/features/store";
 import type { Pillar } from "@/lib/features/types";
 import { colors } from "@/lib/theme";
 
@@ -11,9 +11,11 @@ export default function FeatureListPage() {
     filteredAndSortedFeatures,
     selectedPillars,
     releasedFilter,
+    statusFilter,
     sortOption,
     setSelectedPillars,
     setReleasedFilter,
+    setStatusFilter,
     setSortOption,
   } = useFeatureStore();
 
@@ -29,6 +31,12 @@ export default function FeatureListPage() {
     { label: "All", value: "all" },
     { label: "Released", value: "released" },
     { label: "Unreleased", value: "unreleased" },
+  ];
+
+  const statusOptions: { label: string; value: FeatureStatusFilter }[] = [
+    { label: "All", value: "all" },
+    { label: "In Progress", value: "in_progress" },
+    { label: "Released", value: "released" },
   ];
 
   const sortOptions: { label: string; value: SortOption }[] = [
@@ -104,6 +112,31 @@ export default function FeatureListPage() {
                     backgroundColor: active ? `${colors.primary}18` : "transparent",
                     color: colors.textPrimary,
                     borderRight: "1px solid #eaeaea",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs uppercase tracking-[0.2em] text-stone-500">
+            Status
+          </span>
+          <div className="flex overflow-hidden rounded-full border border-stone-200 bg-white shadow-sm">
+            {statusOptions.map((opt, idx) => {
+              const active = statusFilter === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => setStatusFilter(opt.value)}
+                  className="px-4 py-2 text-xs font-semibold transition"
+                  style={{
+                    backgroundColor: active ? `${colors.primary}18` : "transparent",
+                    color: colors.textPrimary,
+                    borderRight: idx === statusOptions.length - 1 ? "none" : "1px solid #eaeaea",
                   }}
                 >
                   {opt.label}

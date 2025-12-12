@@ -8,7 +8,7 @@ export type Feature = {
   description: string;
   owner: string;
   team: string;
-  status: "In Discovery" | "In Experiment" | "Released";
+  status: FeatureStatus;
   pillar: Pillar;
 };
 
@@ -18,6 +18,8 @@ export type StatsigFlagRef = {
   isFeatureGate: boolean;
   url?: string;
 };
+
+export type FeatureStatus = "in_progress" | "released";
 
 export type Pillar =
   | "Pillar 0"
