@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { featureRepo } from "./repo";
-import type { Feature, Pillar } from "./types";
+import type { Feature, FeatureStatus, Pillar, StatsigFlagRef } from "./types";
 
 export type ReleasedFilter = "all" | "released" | "unreleased";
 export type SortOption = "created_desc" | "created_asc" | "title_asc" | "title_desc";
@@ -65,7 +65,7 @@ export function useFeatureStore() {
 
   const refresh = () => setFeatures(featureRepo.getAll());
 
-  const addStatsigFlag = (featureId: string, flag: Parameters<typeof featureRepo.addStatsigFlag>[1]) => {
+  const addStatsigFlag = (featureId: string, flag: StatsigFlagRef) => {
     const updated = featureRepo.addStatsigFlag(featureId, flag);
     if (updated) refresh();
     return updated;
@@ -78,6 +78,11 @@ export function useFeatureStore() {
 
   const updateFeature = (feature: Feature) => {
     featureRepo.update(feature);
+    refresh();
+  };
+
+  const removeFeature = (id: string) => {
+    featureRepo.delete(id);
     refresh();
   };
 
@@ -103,6 +108,7 @@ export function useFeatureStore() {
     addStatsigFlag,
     addFeature,
     updateFeature,
+    removeFeature,
     filteredAndSortedFeatures,
   };
 }

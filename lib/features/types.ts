@@ -7,7 +7,7 @@ export type Feature = {
   dateReleased?: string;
   description: string;
   owner: string;
-  team: string;
+  team: Team;
   status: FeatureStatus;
   pillar: Pillar;
 };
@@ -20,6 +20,14 @@ export type StatsigFlagRef = {
 };
 
 export type FeatureStatus = "in_progress" | "released";
+
+export type Team =
+  | "Activation"
+  | "Client Experience"
+  | "Platform"
+  | "Growth"
+  | "Experiments"
+  | "Kids";
 
 export type Pillar =
   | "Pillar 0"

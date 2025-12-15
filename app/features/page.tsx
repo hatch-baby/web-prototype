@@ -5,6 +5,8 @@ import { useFeatureStore } from "@/lib/features/store";
 import type { ReleasedFilter, SortOption, FeatureStatusFilter } from "@/lib/features/store";
 import type { Pillar } from "@/lib/features/types";
 import { colors } from "@/lib/theme";
+import { FeatureForm } from "@/components/FeatureForm";
+import { useState } from "react";
 
 export default function FeatureListPage() {
   const {
@@ -17,9 +19,11 @@ export default function FeatureListPage() {
     setReleasedFilter,
     setStatusFilter,
     setSortOption,
+    addFeature,
   } = useFeatureStore();
 
   const allPillars: Pillar[] = ["Pillar 0", "Pillar 1", "Pillar 2", "Pillar Growth"];
+  const [showCreate, setShowCreate] = useState(false);
 
   const togglePillar = (pillar: Pillar) => {
     setSelectedPillars((prev) =>
@@ -49,17 +53,39 @@ export default function FeatureListPage() {
   return (
     <div className="space-y-8">
       <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50 via-white to-[#385481]/10 p-8 shadow-sm ring-1 ring-black/5">
-        <p className="text-sm uppercase tracking-[0.3em] text-stone-500">
-          Library
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold text-stone-900">
-          Feature Library
-        </h1>
-        <p className="mt-3 max-w-3xl text-lg text-stone-700">
-          Track key product experiments and releases powered by Statsig. Browse
-          prototypes, timelines, and rollout flags in one place.
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm uppercase tracking-[0.3em] text-stone-500">
+              Library
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold text-stone-900">
+              Feature Library
+            </h1>
+            <p className="mt-3 max-w-3xl text-lg text-stone-700">
+              Track key product experiments and releases powered by Statsig. Browse
+              prototypes, timelines, and rollout flags in one place.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowCreate((prev) => !prev)}
+            className="rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
+            style={{ backgroundColor: colors.primary }}
+          >
+            {showCreate ? "Close" : "New Feature"}
+          </button>
+        </div>
       </section>
+
+      {showCreate && (
+        <FeatureForm
+          mode="create"
+          onCancel={() => setShowCreate(false)}
+          onSubmit={(feature) => {
+            addFeature(feature);
+            setShowCreate(false);
+          }}
+        />
+      )}
 
       <section className="space-y-4 rounded-3xl border border-stone-100 bg-white/80 p-6 shadow-sm">
         <div className="flex flex-wrap items-center gap-2">

@@ -36,6 +36,12 @@ export class FeatureRepo {
     this.update(updated);
     return updated;
   }
+
+  delete(id: string): boolean {
+    const exists = this.features.some((f) => f.id === id);
+    this.features = this.features.filter((f) => f.id !== id);
+    return exists;
+  }
 }
 
 export const featureRepo = new FeatureRepo(seed);
