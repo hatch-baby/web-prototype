@@ -74,4 +74,17 @@ export const features: Feature[] = [
     status: "in_progress",
     pillar: "Pillar 2",
   },
+  {
+    id: "chat_as_the_primary_interface",
+    title: "Chat as the primary interface",
+    description:
+      "Using chat to change schedule, play favorites and seek information. No real data hookups.",
+    webUrl: "https://hatch-ai-chat-poc.vercel.app/experiment",
+    statsigFlags: [],
+    dateCreated: "2025-12-15",
+    owner: "Anoushka Garg",
+    team: "Kids",
+    status: "in_progress",
+    pillar: "Pillar 2",
+  },
 ];
