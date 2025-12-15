@@ -230,4 +230,17 @@ export const features: Feature[] = [
     status: "in_progress",
     pillar: "Pillar 2",
   },
+  {
+    id: "catherine-sleep-tracker-proto",
+    title: "Catherine Sleep Tracker Proto",
+    description:
+      "In-app module for sleep logging with timer or manual data entry. No real data hookups",
+    webUrl: "https://catherine-test-prototype.vercel.app/",
+    statsigFlags: [],
+    dateCreated: "2024-05-22",
+    owner: "Catherine Hoffman Hammill",
+    team: "Kids",
+    status: "in_progress",
+    pillar: "Pillar 2",
+  },
 ];
