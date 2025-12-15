@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import type { Feature } from "@/lib/features/types";
 import { colors } from "@/lib/theme";
@@ -17,6 +19,15 @@ const statusLabel = (status: Feature["status"]) =>
   status === "released" ? "Released" : "In Progress";
 
 export function FeatureCard({ feature }: Props) {
+  const handleFlagClick =
+    (url?: string) =>
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      if (url) {
+        window.open(url, "_blank", "noreferrer");
+      }
+    };
+
   return (
     <Link
       href={`/features/${feature.id}`}
@@ -64,11 +75,10 @@ export function FeatureCard({ feature }: Props) {
         <div className="flex flex-wrap gap-2">
           {feature.statsigFlags.map((flag) => (
             flag.url ? (
-              <a
+              <button
                 key={flag.name}
-                href={flag.url}
-                target="_blank"
-                rel="noreferrer"
+                type="button"
+                onClick={handleFlagClick(flag.url)}
                 className="rounded-full border px-3 py-1 text-xs font-semibold text-[#1f2f4b] shadow-sm transition hover:-translate-y-0.5 hover:bg-white"
                 style={{
                   borderColor: `${colors.primary}40`,
@@ -76,7 +86,7 @@ export function FeatureCard({ feature }: Props) {
                 }}
               >
                 [{flag.isExperiment ? "E" : "G"}] {flag.name}
-              </a>
+              </button>
             ) : (
               <span
                 key={flag.name}
