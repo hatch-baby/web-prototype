@@ -1,5 +1,39 @@
 import { Feature } from "./types";
 
+// Sample entry
+  // {
+  //   id: "onboarding-flow-v2",
+  //   title: "New Onboarding Flow",
+  //   description:
+  //     "Segment-aware onboarding with progressive disclosure and survey gates driven by Statsig targeting.",
+  //   webUrl: "/prototypes/onboarding-flow-v2",
+  //   statsigFlags: [
+  //     {
+  //       name: "enable_new_registration",
+  //       isExperiment: false,
+  //       isFeatureGate: true,
+  //       url: "https://console.statsig.com/0JEh0qdbLTd3W81GsLZa4/gates/enable_new_registration",
+  //     },
+  //     {
+  //       name: "web_dev_test",
+  //       isExperiment: true,
+  //       isFeatureGate: false,
+  //       url: "https://console.statsig.com/0JEh0qdbLTd3W81GsLZa4/experiments/web_dev_test/results",
+  //     },
+  //     {
+  //       name: "survey_gate_enabled",
+  //       isExperiment: false,
+  //       isFeatureGate: true,
+  //     },
+  //   ],
+  //   dateCreated: "2024-01-22",
+  //   dateReleased: "2024-02-26",
+  //   owner: "Jason Zurita",
+  //   team: "Activation",
+  //   status: "released",
+  //   pillar: "Pillar Growth",
+  // },
+
 export const features: Feature[] = [
   {
     id: "raz-sleep-journal",
