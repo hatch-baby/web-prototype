@@ -86,7 +86,13 @@ if (status !== "in_progress" && status !== "released") {
   process.exit(1);
 }
 
-const dateCreated = payload.dateCreated ?? new Date().toISOString().slice(0, 10);
+const dateCreated =
+  payload.dateCreated ??
+  new Date().toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 const dateReleased = payload.dateReleased;
 const statsigFlags: StatsigFlagRef[] = payload.statsigFlags ?? [];
 
