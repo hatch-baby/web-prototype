@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 /**
- * Dev helper to append a new Feature entry from a JSON payload to lib/features/data.ts.
+ * Dev helper to append a new Feature entry from a JSON payload to the persisted feature store.
  *
  * Usage examples:
  * bun scripts/addFeatureFromJson.ts --json='{"id":"new-feature","title":"New Feature","description":"Short summary","webUrl":"https://example.com","owner":"Alice","team":"Platform","pillar":"Pillar 1","status":"in_progress"}'
@@ -29,7 +29,8 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import type { Pillar, StatsigFlagRef } from "../lib/features/types";
+import { getGlobalFeatureRepo } from "../lib/features/globalRepo";
+import type { Feature, Pillar, StatsigFlagRef } from "../lib/features/types";
 
 type Payload = {
   id: string;
@@ -48,7 +49,7 @@ type Payload = {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
-const dataPath = path.join(projectRoot, "lib", "features", "data.ts");
+const dataPath = path.join(projectRoot, "data", "features.json");
 
 const argPairs = process.argv.slice(2).map((arg) => {
   const [key, ...rest] = arg.replace(/^--/, "").split("=");
@@ -96,53 +97,28 @@ const dateCreated =
 const dateReleased = payload.dateReleased;
 const statsigFlags: StatsigFlagRef[] = payload.statsigFlags ?? [];
 
-const dataFile = fs.readFileSync(dataPath, "utf8");
-if (dataFile.includes(`id: "${payload.id}"`)) {
-  console.error(`Feature with id '${payload.id}' already exists in data.ts. Choose a unique id.`);
+const repo = await getGlobalFeatureRepo();
+
+if (repo.getById(payload.id)) {
+  console.error(`Feature with id '${payload.id}' already exists. Choose a unique id.`);
   process.exit(1);
 }
 
-const flagsString =
-  statsigFlags.length === 0
-    ? ""
-    : statsigFlags
-        .map(
-          (f) =>
-            `      {
-        name: "${f.name}",
-        isExperiment: ${f.isExperiment},
-        isFeatureGate: ${f.isFeatureGate},${
-              f.url ? `\n        url: "${f.url}",` : ""
-            }
-      }`,
-        )
-        .join(",\n");
+const feature: Feature = {
+  id: payload.id,
+  title: payload.title,
+  description: payload.description,
+  webUrl: payload.webUrl,
+  statsigFlags,
+  dateCreated,
+  dateReleased: dateReleased || undefined,
+  owner: payload.owner,
+  team: payload.team,
+  status,
+  pillar: payload.pillar,
+};
 
-const featureBlock = `  {
-    id: "${payload.id}",
-    title: "${payload.title}",
-    description:
-      "${payload.description}",
-    webUrl: "${payload.webUrl}",
-    statsigFlags: [${
-      statsigFlags.length === 0 ? "" : `\n${flagsString}\n    `
-    }],
-    dateCreated: "${dateCreated}",
-    ${dateReleased ? `dateReleased: "${dateReleased}",\n    ` : ""}owner: "${payload.owner}",
-    team: "${payload.team}",
-    status: "${status}",
-    pillar: "${payload.pillar}",
-  },
-`;
-
-const insertPos = dataFile.lastIndexOf("];");
-if (insertPos === -1) {
-  console.error("Could not find feature array terminator in data.ts");
-  process.exit(1);
-}
-
-const updated = `${dataFile.slice(0, insertPos)}${featureBlock}${dataFile.slice(insertPos)}`;
-fs.writeFileSync(dataPath, updated);
+await repo.add(feature);
 
 console.log(
   `Added feature '${payload.title}' (id: ${payload.id}) to ${path.relative(projectRoot, dataPath)}`,

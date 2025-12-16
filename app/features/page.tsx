@@ -80,8 +80,8 @@ export default function FeatureListPage() {
         <FeatureForm
           mode="create"
           onCancel={() => setShowCreate(false)}
-          onSubmit={(feature) => {
-            addFeature(feature);
+          onSubmit={async (feature) => {
+            await addFeature(feature);
             setShowCreate(false);
           }}
         />

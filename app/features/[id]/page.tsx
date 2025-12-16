@@ -1,31 +1,14 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { features } from "@/lib/features/data";
-import type { Feature } from "@/lib/features/types";
-import { colors } from "@/lib/theme";
 import FeatureDetailClient from "@/components/FeatureDetailClient";
+import { getGlobalFeatureRepo } from "@/lib/features/globalRepo";
 
-const statusLabel = (status: Feature["status"]) =>
-  status === "released" ? "Released" : "In Progress";
+export const dynamic = "force-dynamic";
 
-const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
-const getFeatureById = (id: string): Feature | undefined =>
-  features.find((feature) => feature.id === id);
-
-type PageProps = {
-  params: Promise<{ id: string }>;
-};
+type PageProps = { params: { id: string } };
 
 export default async function FeatureDetailPage({ params }: PageProps) {
-  const { id } = await params;
-  const feature = getFeatureById(id);
-
+  const repo = await getGlobalFeatureRepo();
+  const feature = repo.getById(params.id);
   if (!feature) {
     return notFound();
   }

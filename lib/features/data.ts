@@ -88,3 +88,6 @@ export const features: Feature[] = [
     pillar: "Pillar 2",
   },
 ];
+
+// Seed export for file-based persistence bootstrap
+export const FEATURE_SEED_DATA = features;

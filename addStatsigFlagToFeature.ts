@@ -1,5 +1,5 @@
-import { featureRepo } from "@/lib/features/repo";
-import type { StatsigFlagRef } from "@/lib/features/types";
+import { getGlobalFeatureRepo } from "./lib/features/globalRepo";
+import type { StatsigFlagRef } from "./lib/features/types";
 
 // Dev repro script to append a Statsig flag to a feature.
 // Run with: bun addStatsigFlagToFeature.ts
@@ -13,12 +13,13 @@ const newFlag: StatsigFlagRef = {
   url: "https://console.statsig.com/0JEh0qdbLTd3W81GsLZa4/experiments/web_dev_test/results",
 };
 
-const feature = featureRepo.addStatsigFlag(targetFeatureId, newFlag);
+const repo = await getGlobalFeatureRepo();
+const feature = await repo.addStatsigFlag(targetFeatureId, newFlag);
 
-if (feature) {
-  console.log(`Added Statsig flag ${newFlag.name} to feature ${feature.title}`);
-  console.log("Updated flags:", feature.statsigFlags.map((f) => f.name));
-} else {
+if (!feature) {
   console.error(`Feature with id '${targetFeatureId}' not found.`);
   process.exitCode = 1;
+} else {
+  console.log(`Added Statsig flag ${newFlag.name} to feature ${feature.title}`);
+  console.log("Updated flags:", feature.statsigFlags.map((f) => f.name));
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { featureRepo } from "./repo";
+import { useEffect, useMemo, useState } from "react";
 import type { Feature, FeatureStatus, Pillar, StatsigFlagRef } from "./types";
 
 export type ReleasedFilter = "all" | "released" | "unreleased";
@@ -57,33 +56,122 @@ const filterFeatures = (
 };
 
 export function useFeatureStore() {
-  const [features, setFeatures] = useState<Feature[]>(featureRepo.getAll());
+  const [features, setFeatures] = useState<Feature[]>([]);
   const [selectedPillars, setSelectedPillars] = useState<Pillar[]>([]);
   const [releasedFilter, setReleasedFilter] = useState<ReleasedFilter>("all");
   const [sortOption, setSortOption] = useState<SortOption>("created_desc");
   const [statusFilter, setStatusFilter] = useState<FeatureStatusFilter>("all");
 
-  const refresh = () => setFeatures(featureRepo.getAll());
-
-  const addStatsigFlag = (featureId: string, flag: StatsigFlagRef) => {
-    const updated = featureRepo.addStatsigFlag(featureId, flag);
-    if (updated) refresh();
-    return updated;
+  const safeParse = async (res: Response) => {
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.error("Failed to parse JSON response", text);
+      return null;
+    }
   };
 
-  const addFeature = (feature: Feature) => {
-    featureRepo.add(feature);
-    refresh();
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await fetch("/api/features");
+        if (!mounted) return;
+        const json = await safeParse(res);
+        if (!res.ok) {
+          console.error("Failed to load features", json);
+          return;
+        }
+        setFeatures(json?.features ?? []);
+      } catch (e) {
+        console.error("Failed to load features", e);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const addStatsigFlag = async (
+    featureId: string,
+    flag: StatsigFlagRef,
+  ): Promise<Feature | undefined> => {
+    try {
+      const res = await fetch("/api/features/flags", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ featureId, flag }),
+      });
+      const json = await safeParse(res);
+      if (!res.ok) {
+        console.error("Failed to add flag", json);
+        return undefined;
+      }
+      if (json?.features) setFeatures(json.features);
+      return json?.feature as Feature | undefined;
+    } catch (e) {
+      console.error("Failed to add flag", e);
+      return undefined;
+    }
   };
 
-  const updateFeature = (feature: Feature) => {
-    featureRepo.update(feature);
-    refresh();
+  const addFeature = async (feature: Feature): Promise<Feature | undefined> => {
+    try {
+      const res = await fetch("/api/features", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(feature),
+      });
+      const json = await safeParse(res);
+      if (!res.ok) {
+        console.error("Failed to add feature", json);
+        return undefined;
+      }
+      if (json?.features) setFeatures(json.features);
+      return json?.feature as Feature | undefined;
+    } catch (e) {
+      console.error("Failed to add feature", e);
+      return undefined;
+    }
   };
 
-  const removeFeature = (id: string) => {
-    featureRepo.delete(id);
-    refresh();
+  const updateFeature = async (feature: Feature): Promise<Feature | undefined> => {
+    try {
+      const res = await fetch("/api/features", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(feature),
+      });
+      const json = await safeParse(res);
+      if (!res.ok) {
+        console.error("Failed to update feature", json);
+        return undefined;
+      }
+      if (json?.features) setFeatures(json.features);
+      return json?.feature as Feature | undefined;
+    } catch (e) {
+      console.error("Failed to update feature", e);
+      return undefined;
+    }
+  };
+
+  const removeFeature = async (id: string): Promise<boolean> => {
+    try {
+      const res = await fetch(`/api/features?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      const json = await safeParse(res);
+      if (!res.ok) {
+        console.error("Failed to delete feature", json);
+        return false;
+      }
+      if (json?.features) setFeatures(json.features);
+      return true;
+    } catch (e) {
+      console.error("Failed to delete feature", e);
+      return false;
+    }
   };
 
   const filteredAndSortedFeatures = useMemo(

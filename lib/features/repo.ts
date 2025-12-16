@@ -1,11 +1,21 @@
-import { features as seed } from "./data";
 import type { Feature, StatsigFlagRef } from "./types";
+import { FEATURE_SEED_DATA } from "./data";
+import { loadFeatures, saveFeatures } from "./fileRepo";
 
 export class FeatureRepo {
-  private features: Feature[];
+  private features: Feature[] = [];
 
-  constructor(initialFeatures: Feature[]) {
-    this.features = [...initialFeatures];
+  private constructor(initialFeatures: Feature[]) {
+    this.features = initialFeatures;
+  }
+
+  static async create(): Promise<FeatureRepo> {
+    const loaded = await loadFeatures();
+    const initial = loaded.length > 0 ? loaded : FEATURE_SEED_DATA;
+    if (loaded.length === 0) {
+      await saveFeatures(initial);
+    }
+    return new FeatureRepo(initial);
   }
 
   getAll(): Feature[] {
@@ -16,32 +26,37 @@ export class FeatureRepo {
     return this.features.find((f) => f.id === id);
   }
 
-  add(feature: Feature): Feature {
+  private async persist() {
+    await saveFeatures(this.features);
+  }
+
+  async add(feature: Feature): Promise<Feature> {
     this.features = [...this.features, feature];
+    await this.persist();
     return feature;
   }
 
-  update(feature: Feature): Feature {
+  async update(feature: Feature): Promise<Feature> {
     this.features = this.features.map((f) => (f.id === feature.id ? feature : f));
+    await this.persist();
     return feature;
   }
 
-  addStatsigFlag(featureId: string, flag: StatsigFlagRef): Feature | undefined {
+  async addStatsigFlag(featureId: string, flag: StatsigFlagRef): Promise<Feature | undefined> {
     const existing = this.getById(featureId);
     if (!existing) return undefined;
     const updated: Feature = {
       ...existing,
       statsigFlags: [...existing.statsigFlags, flag],
     };
-    this.update(updated);
+    await this.update(updated);
     return updated;
   }
 
-  delete(id: string): boolean {
+  async delete(id: string): Promise<boolean> {
     const exists = this.features.some((f) => f.id === id);
     this.features = this.features.filter((f) => f.id !== id);
+    await this.persist();
     return exists;
   }
 }
-
-export const featureRepo = new FeatureRepo(seed);

@@ -29,9 +29,13 @@ export default function FeatureDetailClient({ feature }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [featureState, setFeatureState] = useState<Feature>(feature);
 
-  const handleDelete = () => {
-    removeFeature(featureState.id);
-    router.push("/features");
+  const handleDelete = async () => {
+    const removed = await removeFeature(featureState.id);
+    if (removed) {
+      router.push("/features");
+    } else {
+      console.error("Failed to delete feature");
+    }
   };
 
   const statsigContent = featureState.statsigFlags.map((flag) => {
@@ -113,8 +117,9 @@ export default function FeatureDetailClient({ feature }: Props) {
           initial={featureState}
           onCancel={() => setEditOpen(false)}
           onSubmit={(updated) => {
-            updateFeature(updated);
-            setFeatureState(updated);
+            updateFeature(updated).then((next) => {
+              setFeatureState(next ?? updated);
+            });
             setEditOpen(false);
           }}
         />
