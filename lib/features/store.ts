@@ -61,6 +61,7 @@ export function useFeatureStore() {
   const [releasedFilter, setReleasedFilter] = useState<ReleasedFilter>("all");
   const [sortOption, setSortOption] = useState<SortOption>("created_desc");
   const [statusFilter, setStatusFilter] = useState<FeatureStatusFilter>("all");
+  const [isLoading, setIsLoading] = useState(true);
 
   const safeParse = async (res: Response) => {
     const text = await res.text();
@@ -86,6 +87,8 @@ export function useFeatureStore() {
         setFeatures(json?.features ?? []);
       } catch (e) {
         console.error("Failed to load features", e);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
     })();
     return () => {
@@ -198,5 +201,6 @@ export function useFeatureStore() {
     updateFeature,
     removeFeature,
     filteredAndSortedFeatures,
+    isLoading,
   };
 }

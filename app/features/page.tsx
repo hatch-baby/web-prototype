@@ -15,6 +15,7 @@ export default function FeatureListPage() {
     releasedFilter,
     statusFilter,
     sortOption,
+    isLoading,
     setSelectedPillars,
     setReleasedFilter,
     setStatusFilter,
@@ -49,6 +50,28 @@ export default function FeatureListPage() {
     { label: "Title A–Z", value: "title_asc" },
     { label: "Title Z–A", value: "title_desc" },
   ];
+
+  const skeletonCards = Array.from({ length: 6 }).map((_, idx) => (
+    <div
+      key={idx}
+      className="flex h-full flex-col rounded-3xl border border-white/60 bg-white/80 p-6 shadow-md ring-1 ring-black/5"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="h-6 w-40 animate-pulse rounded-full bg-stone-200" />
+        <div className="h-6 w-16 animate-pulse rounded-full bg-stone-200" />
+      </div>
+      <div className="mt-3 h-4 w-24 animate-pulse rounded-full bg-stone-200" />
+      <div className="mt-4 space-y-2">
+        <div className="h-3 w-full animate-pulse rounded bg-stone-200" />
+        <div className="h-3 w-11/12 animate-pulse rounded bg-stone-200" />
+        <div className="h-3 w-5/6 animate-pulse rounded bg-stone-200" />
+      </div>
+      <div className="mt-auto pt-6 space-y-2">
+        <div className="h-3 w-24 animate-pulse rounded bg-stone-200" />
+        <div className="h-3 w-24 animate-pulse rounded bg-stone-200" />
+      </div>
+    </div>
+  ));
 
   return (
     <div className="space-y-8">
@@ -191,9 +214,11 @@ export default function FeatureListPage() {
       </section>
 
       <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {filteredAndSortedFeatures.map((feature) => (
-          <FeatureCard key={feature.id} feature={feature} />
-        ))}
+        {isLoading
+          ? skeletonCards
+          : filteredAndSortedFeatures.map((feature) => (
+              <FeatureCard key={feature.id} feature={feature} />
+            ))}
       </section>
     </div>
   );
