@@ -2,8 +2,8 @@
   {
     "id": "raz-sleep-journal",
     "title": "Raz Sleep Journal",
-    "description": "Foundational sleep journal experience with phased rollout and form refinements.",
     "webUrl": "https://raz-web-prototype.vercel.app/",
+    "description": "Foundational sleep journal experience with phased rollout and form refinements.",
     "statsigFlags": [],
     "dateCreated": "2025-12-15",
     "owner": "Raz Papissian",
@@ -15,7 +15,7 @@
     "id": "web-library",
     "title": "Web Library",
     "webUrl": "https://thad-vercel-test-d84y.vercel.app/",
-    "description": "Unified web library for browsing and validating prototypes across teams and pillars. \n",
+    "description": "Unified web library for browsing and validating prototypes across teams and pillars. \n\nNote: Currently broken when opening app through Safari",
     "statsigFlags": [],
     "dateCreated": "2024-05-12",
     "owner": "Thad Cox",

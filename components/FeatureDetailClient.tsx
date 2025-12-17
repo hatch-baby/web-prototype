@@ -100,7 +100,12 @@ export default function FeatureDetailClient({ feature }: Props) {
             Feature Detail
           </p>
           <h1 className="text-3xl font-semibold text-stone-900">{featureState.title}</h1>
-          <p className="mt-2 text-stone-700">{featureState.description}</p>
+        <p
+          className="mt-2 text-stone-700"
+          style={{ whiteSpace: "pre-line" }}
+        >
+          {featureState.description}
+        </p>
           <div className="mt-3 flex flex-wrap gap-3 text-sm text-stone-700">
             <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-stone-700">
               {statusLabel(featureState.status)}
