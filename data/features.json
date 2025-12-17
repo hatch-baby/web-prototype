@@ -13,9 +13,9 @@
   },
   {
     "id": "web-library",
-    "title": "Web Library",
+    "title": "Web Library with a very long title",
     "webUrl": "https://thad-vercel-test-d84y.vercel.app/",
-    "description": "Unified web library for browsing and validating prototypes across teams and pillars. \n",
+    "description": "Unified web library for browsing and validating prototypes across teams and pillars.  Unified web library for browsing and validating prototypes across teams and pillars. \n\naskfjlsfj\nsdkfjslfjdlksjfldk\nsdfjlskjdflksjdf\n\nNote: Currently broken when opening app through Safari",
     "statsigFlags": [],
     "dateCreated": "2024-05-12",
     "owner": "Thad Cox",
