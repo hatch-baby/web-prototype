@@ -10,7 +10,10 @@ export async function loadFeatures(): Promise<Feature[]> {
     return [];
   }
   try {
-    const meta = await head(BLOB_KEY);
+    const meta = await head(BLOB_KEY).catch(() => null);
+    if (!meta?.url) {
+      return [];
+    }
     const res = await fetch(meta.url);
     if (!res.ok) throw new Error(`Failed to fetch blob ${res.status}`);
     const json = (await res.json()) as Feature[];
