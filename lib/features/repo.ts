@@ -1,6 +1,6 @@
 import type { Feature, StatsigFlagRef } from "./types";
 import { FEATURE_SEED_DATA } from "./data";
-import { loadFeatures, saveFeatures } from "./fileRepo";
+import { loadFeatures, saveFeatures } from "./blobRepo";
 
 export class FeatureRepo {
   private features: Feature[] = [];
