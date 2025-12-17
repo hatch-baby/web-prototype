@@ -31,5 +31,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Feature not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ feature, features: repo.getAll() });
+  const features = await repo.getAllAsync();
+  return NextResponse.json({ feature, features });
 }

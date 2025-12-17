@@ -3,47 +3,54 @@ import { FEATURE_SEED_DATA } from "./data";
 import { loadFeatures, saveFeatures } from "./blobRepo";
 
 export class FeatureRepo {
-  private features: Feature[] = [];
-
-  private constructor(initialFeatures: Feature[]) {
-    this.features = initialFeatures;
+  // No in-memory cache; always load fresh from Blob (or seed) per operation.
+  static async create(): Promise<FeatureRepo> {
+    const repo = new FeatureRepo();
+    // Seed blob if empty on first creation.
+    const initial = await repo.loadOrSeed();
+    if (initial.seeded) {
+      await saveFeatures(initial.features);
+    }
+    return repo;
   }
 
-  static async create(): Promise<FeatureRepo> {
+  private async loadOrSeed(): Promise<{ features: Feature[]; seeded: boolean }> {
     const loaded = await loadFeatures();
-    const initial = loaded.length > 0 ? loaded : FEATURE_SEED_DATA;
-    if (loaded.length === 0) {
-      await saveFeatures(initial);
-    }
-    return new FeatureRepo(initial);
+    if (loaded.length > 0) return { features: loaded, seeded: false };
+    return { features: FEATURE_SEED_DATA, seeded: true };
   }
 
   getAll(): Feature[] {
-    return [...this.features];
+    throw new Error("Use async getAllAsync instead");
   }
 
-  getById(id: string): Feature | undefined {
-    return this.features.find((f) => f.id === id);
+  async getAllAsync(): Promise<Feature[]> {
+    const { features, seeded } = await this.loadOrSeed();
+    if (seeded) await saveFeatures(features);
+    return [...features];
   }
 
-  private async persist() {
-    await saveFeatures(this.features);
+  async getById(id: string): Promise<Feature | undefined> {
+    const all = await this.getAllAsync();
+    return all.find((f) => f.id === id);
   }
 
   async add(feature: Feature): Promise<Feature> {
-    this.features = [...this.features, feature];
-    await this.persist();
+    const all = await this.getAllAsync();
+    const next = [...all, feature];
+    await saveFeatures(next);
     return feature;
   }
 
   async update(feature: Feature): Promise<Feature> {
-    this.features = this.features.map((f) => (f.id === feature.id ? feature : f));
-    await this.persist();
+    const all = await this.getAllAsync();
+    const next = all.map((f) => (f.id === feature.id ? feature : f));
+    await saveFeatures(next);
     return feature;
   }
 
   async addStatsigFlag(featureId: string, flag: StatsigFlagRef): Promise<Feature | undefined> {
-    const existing = this.getById(featureId);
+    const existing = await this.getById(featureId);
     if (!existing) return undefined;
     const updated: Feature = {
       ...existing,
@@ -54,9 +61,12 @@ export class FeatureRepo {
   }
 
   async delete(id: string): Promise<boolean> {
-    const exists = this.features.some((f) => f.id === id);
-    this.features = this.features.filter((f) => f.id !== id);
-    await this.persist();
+    const all = await this.getAllAsync();
+    const next = all.filter((f) => f.id !== id);
+    const exists = next.length !== all.length;
+    if (exists) {
+      await saveFeatures(next);
+    }
     return exists;
   }
 }

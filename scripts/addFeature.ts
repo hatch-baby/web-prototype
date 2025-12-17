@@ -70,7 +70,7 @@ if (!pillarSet.includes(pillar)) {
 
 const repo = await getGlobalFeatureRepo();
 
-if (repo.getById(id)) {
+if (await repo.getById(id)) {
   console.error(`Feature with id '${id}' already exists. Choose a unique id.`);
   process.exit(1);
 }

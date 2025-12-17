@@ -37,7 +37,7 @@ export default async function FeatureDetailPage({ params }: PageProps) {
   if (!feature) {
     try {
       const repo = await getGlobalFeatureRepo();
-      feature = repo.getById(id);
+      feature = await repo.getById(id);
     } catch (err) {
       console.error("Failed to load feature from repo", err);
     }

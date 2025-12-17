@@ -7,7 +7,8 @@ const badRequest = (message: string) =>
 
 export async function GET() {
   const repo = await getGlobalFeatureRepo();
-  return NextResponse.json({ features: repo.getAll() });
+  const features = await repo.getAllAsync();
+  return NextResponse.json({ features });
 }
 
 export async function POST(req: Request) {
@@ -21,7 +22,8 @@ export async function POST(req: Request) {
   const repo = await getGlobalFeatureRepo();
   await repo.add(feature);
 
-  return NextResponse.json({ feature, features: repo.getAll() });
+  const features = await repo.getAllAsync();
+  return NextResponse.json({ feature, features });
 }
 
 export async function PUT(req: Request) {
@@ -39,7 +41,8 @@ export async function PUT(req: Request) {
   const repo = await getGlobalFeatureRepo();
   await repo.update(feature);
 
-  return NextResponse.json({ feature, features: repo.getAll() });
+  const features = await repo.getAllAsync();
+  return NextResponse.json({ feature, features });
 }
 
 export async function DELETE(req: Request) {
@@ -57,5 +60,6 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ features: repo.getAll() });
+  const features = await repo.getAllAsync();
+  return NextResponse.json({ features });
 }

@@ -99,7 +99,7 @@ const statsigFlags: StatsigFlagRef[] = payload.statsigFlags ?? [];
 
 const repo = await getGlobalFeatureRepo();
 
-if (repo.getById(payload.id)) {
+if (await repo.getById(payload.id)) {
   console.error(`Feature with id '${payload.id}' already exists. Choose a unique id.`);
   process.exit(1);
 }
