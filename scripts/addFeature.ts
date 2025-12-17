@@ -27,7 +27,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { getGlobalFeatureRepo } from "../lib/features/globalRepo";
-import type { Feature, Pillar } from "../lib/features/types";
+import type { Feature, Pillar, Team } from "../lib/features/types";
 
 type ArgMap = Record<string, string | undefined>;
 
@@ -56,7 +56,7 @@ const title = required("title");
 const description = required("description");
 const webUrl = required("webUrl");
 const owner = required("owner");
-const team = required("team");
+const team = required("team") as Team;
 const pillar = required("pillar") as Pillar;
 const status = (args.status ?? "in_progress") as "in_progress" | "released";
 const dateCreated = args.dateCreated ?? new Date().toISOString().slice(0, 10);

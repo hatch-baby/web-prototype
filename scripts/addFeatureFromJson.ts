@@ -30,7 +30,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getGlobalFeatureRepo } from "../lib/features/globalRepo";
-import type { Feature, Pillar, StatsigFlagRef } from "../lib/features/types";
+import type { Feature, Pillar, StatsigFlagRef, Team } from "../lib/features/types";
 
 type Payload = {
   id: string;
@@ -38,7 +38,7 @@ type Payload = {
   description: string;
   webUrl: string;
   owner: string;
-  team: string;
+  team: Team;
   pillar: Pillar;
   status?: "in_progress" | "released";
   dateCreated?: string;
