@@ -3,6 +3,7 @@ import FeatureDetailClient from "@/components/FeatureDetailClient";
 import { getGlobalFeatureRepo } from "@/lib/features/globalRepo";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 type PageProps = { params: { id: string } | Promise<{ id: string }> };
 

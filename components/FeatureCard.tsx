@@ -8,12 +8,16 @@ type Props = {
   feature: Feature;
 };
 
-const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString(undefined, {
+const formatDate = (date: string) => {
+  const [y, m, d] = date.split("-").map(Number);
+  const parsed = new Date(Date.UTC(y, (m ?? 1) - 1, d ?? 1));
+  return parsed.toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
+    timeZone: "UTC",
   });
+};
 
 const statusLabel = (status: Feature["status"]) =>
   status === "released" ? "Released" : "In Progress";

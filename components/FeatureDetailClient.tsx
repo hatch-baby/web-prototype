@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Feature, StatsigFlagRef } from "@/lib/features/types";
 import { colors } from "@/lib/theme";
 import { FeatureForm } from "./FeatureForm";
@@ -11,12 +11,16 @@ import { useFeatureStore } from "@/lib/features/store";
 const statusLabel = (status: Feature["status"]) =>
   status === "released" ? "Released" : "In Progress";
 
-const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString(undefined, {
+const formatDate = (date: string) => {
+  const [y, m, d] = date.split("-").map(Number);
+  const parsed = new Date(Date.UTC(y, (m ?? 1) - 1, d ?? 1));
+  return parsed.toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
+    timeZone: "UTC",
   });
+};
 
 type Props = {
   feature: Feature;
@@ -28,6 +32,27 @@ export default function FeatureDetailClient({ feature }: Props) {
   const [editOpen, setEditOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [featureState, setFeatureState] = useState<Feature>(feature);
+
+  useEffect(() => {
+    let ignore = false;
+    const loadLatest = async () => {
+      try {
+        const res = await fetch("/api/features");
+        const json = await res.json();
+        if (ignore) return;
+        const latest = (json?.features as Feature[] | undefined)?.find(
+          (f) => f.id === feature.id,
+        );
+        if (latest) setFeatureState(latest);
+      } catch (err) {
+        console.error("Failed to refresh feature", err);
+      }
+    };
+    loadLatest();
+    return () => {
+      ignore = true;
+    };
+  }, [feature.id]);
 
   const handleDelete = async () => {
     const removed = await removeFeature(featureState.id);

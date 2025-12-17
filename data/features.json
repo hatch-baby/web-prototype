@@ -14,12 +14,12 @@
   {
     "id": "web-library",
     "title": "Web Library",
-    "description": "Unified web library for browsing and validating prototypes across teams and pillars.",
     "webUrl": "https://thad-vercel-test-d84y.vercel.app/",
+    "description": "Unified web library for browsing and validating prototypes across teams and pillars. \n",
     "statsigFlags": [],
     "dateCreated": "2024-05-12",
-    "owner": "Team Web",
-    "team": "Platform",
+    "owner": "Thad Cox",
+    "team": "Kids",
     "status": "in_progress",
     "pillar": "Pillar 2"
   },
@@ -49,26 +49,14 @@
   },
   {
     "id": "d28f3a37-06b3-4027-b695-a665dad8d9df",
-    "title": "Baby Agent (to replace Fin)",
+    "title": "Baby Agent (to replace Fin) test",
     "webUrl": "https://hatch-ai-chat-poc.vercel.app/",
     "description": "Replacing Fin with our own chat interface. Using user login details. No human escalation",
     "statsigFlags": [],
-    "dateCreated": "2025-12-16",
+    "dateCreated": "2025-12-15",
     "owner": "Marcus Kazmierczak",
     "team": "Kids",
     "status": "in_progress",
     "pillar": "Pillar 2"
-  },
-  {
-    "id": "2d2dae20-3c3b-4752-b340-10aaf752c138",
-    "title": "test",
-    "webUrl": "www.test.com",
-    "description": "test",
-    "statsigFlags": [],
-    "dateCreated": "2025-12-16",
-    "owner": "test",
-    "team": "Platform",
-    "status": "in_progress",
-    "pillar": "Pillar 1"
   }
 ]
