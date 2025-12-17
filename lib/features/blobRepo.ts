@@ -1,7 +1,7 @@
 import type { Feature } from "./types";
 import { head, put } from "@vercel/blob";
 
-const BLOB_KEY = "features.json";
+const BLOB_KEY = process.env.FEATURES_BLOB_KEY ?? "features.json";
 const hasToken = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 
 export async function loadFeatures(): Promise<Feature[]> {
@@ -32,5 +32,6 @@ export async function saveFeatures(features: Feature[]): Promise<void> {
   await put(BLOB_KEY, JSON.stringify(features, null, 2), {
     access: "public",
     contentType: "application/json",
+    addRandomSuffix: false,
   });
 }

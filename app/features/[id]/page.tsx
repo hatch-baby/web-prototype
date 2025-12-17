@@ -14,32 +14,32 @@ export default async function FeatureDetailPage({ params }: PageProps) {
 
   let feature: Feature | undefined;
 
-  // Resolve from in-process repo (loads from Blob-backed persistence in create()).
-  try {
-    const repo = await getGlobalFeatureRepo();
-    feature = repo.getById(id);
-  } catch (err) {
-    console.error("Failed to load feature from repo", err);
+  // First try the API using an explicit base URL (avoids localhost lookups on Vercel).
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
+
+  if (baseUrl) {
+    try {
+      const res = await fetch(`${baseUrl}/api/features`, { cache: "no-store" });
+      if (res.ok) {
+        const data = (await res.json()) as { features?: Feature[] };
+        feature = data.features?.find((f) => f.id === id);
+      } else {
+        console.error(`Detail API fetch failed: ${res.status} ${res.statusText}`);
+      }
+    } catch (err) {
+      console.error("Failed to load feature via API for detail page", err);
+    }
   }
 
-  // Fallback: fetch via API using a safe absolute base URL (prefer deployed host).
+  // Fallback: resolve from in-process repo (loads from Blob-backed persistence in create()).
   if (!feature) {
-    const baseUrl =
-      (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ??
-      process.env.NEXT_PUBLIC_BASE_URL;
-
-    if (baseUrl) {
-      try {
-        const res = await fetch(`${baseUrl}/api/features`, { cache: "no-store" });
-        if (res.ok) {
-          const data = (await res.json()) as { features?: Feature[] };
-          feature = data.features?.find((f) => f.id === id);
-        } else {
-          console.error(`Detail API fetch failed: ${res.status} ${res.statusText}`);
-        }
-      } catch (err) {
-        console.error("Failed to load feature via API for detail page", err);
-      }
+    try {
+      const repo = await getGlobalFeatureRepo();
+      feature = repo.getById(id);
+    } catch (err) {
+      console.error("Failed to load feature from repo", err);
     }
   }
 
