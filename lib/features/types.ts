@@ -22,11 +22,9 @@ export type StatsigFlagRef = {
 export type FeatureStatus = "in_progress" | "released";
 
 export type Team =
-  | "Activation"
-  | "Client Experience"
   | "Platform"
   | "Growth"
-  | "Experiments"
+  | "Adults"
   | "Kids";
 
 export type Pillar =
