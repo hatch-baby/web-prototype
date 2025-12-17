@@ -94,32 +94,13 @@ export default function FeatureDetailClient({ feature }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
           <p className="text-xs uppercase tracking-[0.3em] text-stone-500">
             Feature Detail
           </p>
-          <h1 className="text-3xl font-semibold text-stone-900">
-            {featureState.title}
-          </h1>
-          <div className="mt-2 flex flex-wrap justify-end gap-2">
-            <Link
-              href="/features"
-              className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-300 hover:shadow"
-            >
-              ← Back to Features
-            </Link>
-            <button
-              onClick={() => setEditOpen((prev) => !prev)}
-              className="rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
-              style={{ backgroundColor: colors.primary }}
-            >
-              {editOpen ? "Close Edit" : "Edit"}
-            </button>
-          </div>
-          <p className="mt-2 whitespace-pre-line text-stone-700">
-            {featureState.description}
-          </p>
+          <h1 className="text-3xl font-semibold text-stone-900">{featureState.title}</h1>
+          <p className="mt-2 text-stone-700">{featureState.description}</p>
           <div className="mt-3 flex flex-wrap gap-3 text-sm text-stone-700">
             <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-stone-700">
               {statusLabel(featureState.status)}
@@ -137,6 +118,21 @@ export default function FeatureDetailClient({ feature }: Props) {
             <span className="text-stone-600">Owner: {featureState.owner}</span>
             <span className="text-stone-600">Team: {featureState.team}</span>
           </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/features"
+            className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-300 hover:shadow"
+          >
+            ← Back to Features
+          </Link>
+          <button
+            onClick={() => setEditOpen((prev) => !prev)}
+            className="rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
+            style={{ backgroundColor: colors.primary }}
+          >
+            {editOpen ? "Close Edit" : "Edit"}
+          </button>
         </div>
       </div>
 
